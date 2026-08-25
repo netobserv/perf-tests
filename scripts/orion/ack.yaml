@@ -50,4 +50,7 @@ ack:
     reason: CD-v2;instance type change from m6i.4xlarge to m6a.2xlarge 
   - uuid: 6e47ef16-ffad-4f25-9146-eebeda13f40c
     metric: TotalClusterCPUUsage_avg
-    reason: NDH;instance type change from m6i.4xlarge to m6a.2xlarge 
+    reason: NDH;instance type change from m6i.4xlarge to m6a.2xlarge
+  - uuid: 1f29c278-1e0b-4cd6-8f8d-18335529073b
+    metric: nWorkloadFlowsProcessedTotals_max
+    reason: NDH;switch to OCP 5.0
