@@ -77,7 +77,7 @@ createFlowCollector() {
   echo "====> Creating Flow Collector"
 
   echo "====> Creating secret-creator RoleBinding in netobserv"
-  oc create rolebinding secret-creator -n netobserv --clusterrole=netobserv-secret-creator --serviceaccount=netobserv:netobserv-controller-manager 2>/dev/null || true
+  oc create rolebinding secret-creator -n netobserv --clusterrole=netobserv-secret-creator --serviceaccount=openshift-netobserv-operator:netobserv-controller-manager 2>/dev/null || true
 
   oc process --ignore-unknown-parameters=true -f "$SCRIPTS_DIR"/netobserv/flows_v1beta2_flowcollector.yaml $templateParams -n default -o yaml >"$ARTIFACT_DIR"/flowcollector.yaml
   oc apply -f "$ARTIFACT_DIR"/flowcollector.yaml
@@ -90,7 +90,7 @@ createFlowCollector() {
     timeout=$((timeout+5))
   done
   echo "====> Creating secret-creator RoleBinding in netobserv-privileged"
-  oc create rolebinding secret-creator -n netobserv-privileged --clusterrole=netobserv-secret-creator --serviceaccount=netobserv:netobserv-controller-manager 2>/dev/null || true
+  oc create rolebinding secret-creator -n netobserv-privileged --clusterrole=netobserv-secret-creator --serviceaccount=openshift-netobserv-operator:netobserv-controller-manager 2>/dev/null || true
 
   waitForFlowcollectorReady
   oc get pods -n netobserv
@@ -357,7 +357,7 @@ deploy_lokistack() {
   oc apply -f $SCRIPTS_DIR/loki/loki-ratelimit-alert.yaml
 
   echo "====> Creating secret-watcher RoleBinding in $LOKI_NS"
-  oc create rolebinding secret-watcher -n $LOKI_NS --clusterrole=netobserv-secret-watcher --serviceaccount=netobserv:netobserv-controller-manager 2>/dev/null || true
+  oc create rolebinding secret-watcher -n $LOKI_NS --clusterrole=netobserv-secret-watcher --serviceaccount=openshift-netobserv-operator:netobserv-controller-manager 2>/dev/null || true
 }
 
 deploy_downstream_catalogsource() {
@@ -428,7 +428,7 @@ deploy_kafka() {
   oc wait --timeout=180s --for=condition=ready kafkatopic network-flows -n $KAFKA_NS || return 1
 
   echo "====> Creating secret-watcher RoleBinding in $KAFKA_NS"
-  oc create rolebinding secret-watcher -n $KAFKA_NS --clusterrole=netobserv-secret-watcher --serviceaccount=netobserv:netobserv-controller-manager 2>/dev/null || true
+  oc create rolebinding secret-watcher -n $KAFKA_NS --clusterrole=netobserv-secret-watcher --serviceaccount=openshift-netobserv-operator:netobserv-controller-manager 2>/dev/null || true
 }
 
 delete_s3() {
