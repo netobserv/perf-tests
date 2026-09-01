@@ -67,6 +67,8 @@ deploy_netobserv() {
     sleep 10
     timeout=$((timeout+10))
   done
+  
+  oc wait --timeout=180s --for=condition=ready pod -l app=netobserv-plugin-static -n openshift-netobserv-operator || return 1
   # when using Internal builds, patch csv with images
   # of same sha256 of quay.io instead registry.redhat.io
   patch_unreleased_images
@@ -115,6 +117,9 @@ waitForFlowcollectorReady() {
     echo "====> ebpf agents are not ready after $timeout, checking again..."
   done
   oc wait --timeout=1200s --for=condition=ready flowcollector cluster || return 1
+
+  echo "====> Waiting for all pods in netobserv namespace to be ready"
+  oc wait --timeout=300s --for=condition=ready pod --all -n netobserv || return 1
 }
 
 patch_netobserv() {
